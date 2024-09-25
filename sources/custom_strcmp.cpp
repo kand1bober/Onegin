@@ -5,7 +5,7 @@
 int custom_strcmp_begin(void* a, void* b)  // compares from begining (from left to right)
 {
     char* first = (char* )( (*(line_ptr_begin_end* )a).begin);
-    char* second = (char* )( (*(line_ptr_begin_end* )b).begin);
+    char* second = (char* )( (*(line_ptr_begin_end* )b).begin); //здесь можно проще: передавать структуру, а не указатель на структуру, хотя, так медленнее. выражение будет проще
     printf("Comparing: \n");
     printf(GREEN "1: %s\n" DELETE_COLOR, first);
     printf(GREEN "2: %s\n" DELETE_COLOR, second);
@@ -24,7 +24,8 @@ int custom_strcmp_begin(void* a, void* b)  // compares from begining (from left 
     printf("minimum length: %ld\n", min_size_of_line);
 
     int diff = 0;
-    for(unsigned long int num_in_line_1 = 0, num_in_line_2 = 0; (num_in_line_1 < min_size_of_line) && (num_in_line_2 < min_size_of_line); )
+    unsigned long int num_in_line_1 = 0, num_in_line_2 = 0;
+    while( (num_in_line_1 < min_size_of_line) && (num_in_line_2 < min_size_of_line) )
     {
         printf(YELLOW "nums of symbols in line %ld %ld\n" DELETE_COLOR, num_in_line_1, num_in_line_2);
 
@@ -50,10 +51,20 @@ int custom_strcmp_begin(void* a, void* b)  // compares from begining (from left 
         }
         else
         {
+            printf("num_in_line_1 -- %ld, num_in_line_2 -- %ld\n", num_in_line_1, num_in_line_2);
             diff = ( toupper( *(first + num_in_line_1) )  - toupper( *(second + num_in_line_2) ) );
             printf("difference between %c and %c: %d\n",toupper( *( first + num_in_line_1 ) ), toupper( *( second + num_in_line_2) ), diff);
-            return diff;
+            // return diff;
+            if(diff != 0)
+                return diff;
+            else
+            {
+                num_in_line_1++;
+                num_in_line_2++;
+                continue;
+            }
         }
+
     }
     printf("End of comparing!\n");
     return -1;
@@ -111,7 +122,15 @@ int custom_strcmp_end(void* a, void* b)
         {
             int diff = ( toupper( *( first_end - num_in_line_1 ) ) - toupper( *( second_end - num_in_line_2) ) );
             printf("difference between %c and %c: %d\n", toupper( *( first_end - num_in_line_1 ) ), toupper( *( second_end - num_in_line_2) ), diff);
-            return ( diff = ( toupper( *(first_end - num_in_line_1) )  - toupper( *(second_end - num_in_line_2) ) ) );
+            if(diff != 0)
+                return diff;
+            else
+            {
+                num_in_line_1++;
+                num_in_line_2++;
+                continue;
+            }
+
         }
     }
     printf("End of comparing!\n");
